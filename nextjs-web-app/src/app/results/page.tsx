@@ -31,20 +31,12 @@ export default function Results() {
   }>({});
   const { theme } = useTheme();
 
-  const variations = [
-    "",
-    "Make it visually appealing and use a different framework than the other versions.",
-    "Focus on simplicity and performance. Use minimal dependencies.",
-    "Add some creative features that might not be explicitly mentioned in the prompt.",
-    "Create an enhanced version with additional features and modern design patterns.",
-  ];
-
   const appTitles = [
-    "Standard Version",
-    "Visual Focus",
-    "Minimalist Version",
-    "Creative Approach",
-    "Enhanced Version",
+    "Minimalist Design",
+    "Bold & Vibrant",
+    "Professional Style",
+    "Playful Theme",
+    "Futuristic Look",
   ];
 
   // Handle keyboard shortcuts
@@ -72,24 +64,11 @@ export default function Results() {
   const generateApp = async (index: number, promptText: string) => {
     const startTime = performance.now();
     try {
-      const framework =
-        appTitles[index] === "Standard Version"
-          ? "bootstrap"
-          : appTitles[index] === "Visual Focus"
-          ? "materialize"
-          : appTitles[index] === "Minimalist Version"
-          ? "pure"
-          : appTitles[index] === "Creative Approach"
-          ? "tailwind"
-          : "patternfly";
-
       const response = await fetch("/api/generate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          prompt: promptText,
-          variation: variations[index],
-          framework,
+          prompt: promptText
         }),
       });
 

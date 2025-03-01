@@ -1,17 +1,17 @@
 import { OpenAI } from 'openai';
 import { NextResponse } from 'next/server';
 
-const frameworkPrompts = {
-  tailwind: 'Use Tailwind CSS for styling with modern utility classes. Include the Tailwind CDN.',
-  materialize: 'Use Materialize CSS framework for a Material Design look. Include the Materialize CDN.',
-  bootstrap: 'Use Bootstrap 5 for responsive components and layout. Include the Bootstrap CDN.',
-  patternfly: 'Use PatternFly for enterprise-grade UI components. Include the PatternFly CDN.',
-  pure: 'Use Pure CSS for minimalist, responsive design. Include the Pure CSS CDN.'
-};
+const personalities = [
+  "Minimalist - Focus on clean, simple design with plenty of white space and subtle animations",
+  "Bold - Use vibrant colors, large typography, and dramatic effects",
+  "Professional - Clean corporate style with neutral colors and structured layouts",
+  "Playful - Fun, colorful design with whimsical elements and bouncy animations",
+  "Futuristic - Sleek, modern design with neon accents and high-tech aesthetics"
+];
 
 export async function POST(req: Request) {
   try {
-    const { prompt, variation, framework } = await req.json();
+    const { prompt } = await req.json();
     
     const groqApiKey = process.env.GROQ_API_KEY;
     if (!groqApiKey) {
@@ -23,14 +23,12 @@ export async function POST(req: Request) {
       baseURL: 'https://api.groq.com/openai/v1',
     });
 
-    const frameworkInstructions = framework ? frameworkPrompts[framework as keyof typeof frameworkPrompts] : '';
-
-    const fullPrompt = `Create a well-structured, modern web application:
+    // Create prompts for all personalities
+    const prompts = personalities.map(personality => `Create a well-structured, modern web application:
 
 Instructions:
 1. Base functionality: ${prompt}
-2. Variation: ${variation}
-3. Framework: ${frameworkInstructions}
+2. Design personality: ${personality}
 
 Technical Requirements:
 - Create a single HTML file with clean, indented code structure
@@ -59,14 +57,22 @@ Additional Notes:
 
 Format the code with proper indentation and spacing for readability.`;
 
-    const response = await client.chat.completions.create({
-      model: 'llama-3.2-1b-preview',
-      messages: [{ role: 'user', content: fullPrompt }],
-      temperature: 0.7,
-      max_tokens: 4096,
-    });
+    // Create all LLM calls in parallel
+    const responses = await Promise.all(
+      prompts.map(prompt => 
+        client.chat.completions.create({
+          model: 'llama-3.2-1b-preview',
+          messages: [{ role: 'user', content: prompt }],
+          temperature: 0.7,
+          max_tokens: 4096,
+        })
+      )
+    );
 
-    return NextResponse.json({ code: response.choices[0].message.content });
+    // Extract codes from all responses
+    const codes = responses.map(response => response.choices[0].message.content);
+
+    return NextResponse.json({ codes });
   } catch (error) {
     console.error('Error:', error);
     return NextResponse.json(

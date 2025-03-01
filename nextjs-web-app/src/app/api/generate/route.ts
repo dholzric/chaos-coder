@@ -73,8 +73,7 @@ Format the code with proper indentation and spacing for readability.`;
     const codes = responses.map(response => response.choices[0].message.content);
 
     return NextResponse.json({ codes });
-  } 
-  catch (error) {
+  } catch (error) {
     console.error('Error:', error);
     return NextResponse.json(
       { error: 'Failed to generate code' },

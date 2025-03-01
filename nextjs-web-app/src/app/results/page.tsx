@@ -61,7 +61,7 @@ export default function Results() {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
-  const generateApp = async (index: number, promptText: string) => {
+  const generateAllApps = async (promptText: string) => {
     const startTime = performance.now();
     try {
       const response = await fetch("/api/generate", {
@@ -73,7 +73,7 @@ export default function Results() {
       });
 
       if (!response.ok) {
-        throw new Error(`Failed to generate app ${index + 1}`);
+        throw new Error("Failed to generate applications");
       }
 
       const data = await response.json();
@@ -81,33 +81,31 @@ export default function Results() {
         throw new Error(data.error);
       }
 
-      setResults((prev) => {
-        const newResults = [...prev];
-        newResults[index] = data.code;
-        return newResults;
-      });
-
-      setEditedResults((prev) => {
-        const newResults = [...prev];
-        newResults[index] = data.code;
-        return newResults;
-      });
-
-      const endTime = performance.now();
-      setGenerationTimes((prev) => ({
-        ...prev,
-        [index]: (endTime - startTime) / 1000, // Convert to seconds
-      }));
+      if (data.codes && Array.isArray(data.codes)) {
+        setResults(data.codes);
+        setEditedResults(data.codes);
+        
+        // Record generation times for all apps
+        const endTime = performance.now();
+        const totalTime = (endTime - startTime) / 1000; // Convert to seconds
+        
+        // Distribute the time across all versions
+        const newTimes: {[key: number]: number} = {};
+        data.codes.forEach((_, index) => {
+          newTimes[index] = totalTime;
+        });
+        
+        setGenerationTimes(newTimes);
+      } else {
+        throw new Error('Invalid response format from server');
+      }
     } catch (err) {
       setError(
         err instanceof Error ? err.message : "Failed to generate applications"
       );
     } finally {
-      setLoadingStates((prev) => {
-        const newStates = [...prev];
-        newStates[index] = false;
-        return newStates;
-      });
+      // Set all loading states to false
+      setLoadingStates(new Array(5).fill(false));
     }
   };
 
@@ -119,8 +117,8 @@ export default function Results() {
       return;
     }
 
-    // Generate all apps in parallel
-    Promise.all(variations.map((_, index) => generateApp(index, prompt)));
+    // Generate all apps with a single API call
+    generateAllApps(prompt);
   }, [searchParams]);
 
   const handleNewPrompt = (prompt: string) => {
@@ -128,7 +126,7 @@ export default function Results() {
     setResults(new Array(5).fill(""));
     setEditedResults(new Array(5).fill(""));
     setGenerationTimes({});
-    Promise.all(variations.map((_, index) => generateApp(index, prompt)));
+    generateAllApps(prompt);
   };
 
   const handleCodeChange = (newCode: string) => {

@@ -27,11 +27,8 @@ The purpose of 10xDev is to accelerate the development process by providing mult
 
 ## Setup
 
-### 1. Clone the repository
-
 ```bash
-git clone https://github.com/aj47/10x-dev.git
-cd 10x-dev
+cd nextjs-web-app
 ```
 
 ### 2. Install dependencies

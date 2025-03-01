@@ -19,49 +19,43 @@ interface AppTileProps {
   theme: "light" | "dark";
 }
 
-interface FrameworkInfo {
+interface StyleInfo {
   icon: IconType;
   description: string;
   rightIcon: IconType;
-  framework: string;
   iconColor: string;
 }
 
-const frameworkMap: Record<string, FrameworkInfo> = {
-  "Standard Version": {
-    icon: FaBootstrap,
-    description: "Built with Bootstrap for robust, responsive design",
-    rightIcon: FaCode,
-    framework: "bootstrap",
-    iconColor: "#7952b3",
-  },
-  "Visual Focus": {
-    icon: FaPalette,
-    description: "Using Materialize for beautiful Material Design",
-    rightIcon: FaCode,
-    framework: "materialize",
-    iconColor: "#eb7077",
-  },
-  "Minimalist Version": {
+const styleMap: Record<string, StyleInfo> = {
+  "Minimalist Design": {
     icon: FaLeaf,
-    description: "Pure CSS for lightweight, clean aesthetics",
+    description: "Clean and simple design with plenty of white space",
     rightIcon: FaCode,
-    framework: "pure",
     iconColor: "#3cb371",
   },
-  "Creative Approach": {
-    icon: FaWind,
-    description: "Powered by Tailwind CSS for modern utility-first design",
+  "Bold & Vibrant": {
+    icon: FaPalette,
+    description: "Vibrant colors and dramatic effects",
     rightIcon: FaCode,
-    framework: "tailwind",
+    iconColor: "#eb7077",
+  },
+  "Professional Style": {
+    icon: FaShieldAlt,
+    description: "Clean and structured corporate style",
+    rightIcon: FaCode,
+    iconColor: "#06c",
+  },
+  "Playful Theme": {
+    icon: FaWind,
+    description: "Fun and colorful with whimsical elements",
+    rightIcon: FaCode,
     iconColor: "#38bdf8",
   },
-  "Enhanced Version": {
-    icon: FaShieldAlt,
-    description: "Enterprise-ready with PatternFly components",
+  "Futuristic Look": {
+    icon: FaBootstrap,
+    description: "Sleek and modern with high-tech aesthetics",
     rightIcon: FaCode,
-    framework: "patternfly",
-    iconColor: "#06c",
+    iconColor: "#7952b3",
   },
 };
 
@@ -72,9 +66,9 @@ export default function AppTile({
   isLoading,
   theme,
 }: AppTileProps) {
-  const framework = frameworkMap[title];
-  const LeftIcon = framework.icon;
-  const RightIcon = framework.rightIcon;
+  const style = styleMap[title];
+  const LeftIcon = style.icon;
+  const RightIcon = style.rightIcon;
 
   const getBgColor = () => {
     if (isSelected) {
@@ -101,7 +95,7 @@ export default function AppTile({
         <div className="flex-shrink-0">
           <LeftIcon
             className="w-6 h-6"
-            style={{ color: isSelected ? '#ffffff' : framework.iconColor }}
+            style={{ color: isSelected ? '#ffffff' : style.iconColor }}
           />
         </div>
         <div className="flex-1 min-w-0">
@@ -125,7 +119,7 @@ export default function AppTile({
                 : "text-gray-600"
             }`}
           >
-            {framework.description}
+            {style.description}
           </p>
           {isLoading && (
             <div className="mt-2">

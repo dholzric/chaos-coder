@@ -35,7 +35,7 @@ Technical Requirements:
 - Organize the code in this order:
   1. <!DOCTYPE html> and meta tags
   2. <title> and other head elements
-  3. Framework CSS and JS imports
+  3. CSS and JS imports
   4. Custom CSS styles in a <style> tag
   5. HTML body with semantic markup
   6. JavaScript in a <script> tag at the end of body
@@ -46,7 +46,7 @@ Technical Requirements:
 - Use modern ES6+ JavaScript features
 - Keep the code modular and well-organized
 - Ensure all interactive elements have proper styling states (hover, active, etc.)
-- Implement the framework-specific best practices and components
+- Implement modern web development best practices
 
 Additional Notes:
 - The code must be complete and immediately runnable

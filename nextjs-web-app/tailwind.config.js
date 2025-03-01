@@ -10,8 +10,14 @@ module.exports = {
   darkMode: "class",
   theme: {
     extend: {
+      fontFamily: {
+        sans: ['var(--font-inter)', 'system-ui', 'sans-serif'],
+      },
       animation: {
         aurora: "aurora 15s linear infinite",
+        "text-gradient": "text-gradient 1.5s linear infinite",
+        "background-shine": "background-shine 2s linear infinite",
+        shimmer: "shimmer 2s linear infinite",
       },
       keyframes: {
         aurora: {
@@ -22,10 +28,27 @@ module.exports = {
             transform: "translate(-50%, 50%) scale(1.2)",
           },
           "66%": {
-            transform: "translate(50%, 0%) scale(0.9)",
+            transform: "translate(50%, 50%) scale(0.9)",
           },
           "100%": {
             transform: "translate(0, 0) scale(1)",
+          },
+        },
+        "text-gradient": {
+          to: {
+            backgroundPosition: "200% center",
+          },
+        },
+        "background-shine": {
+          from: { backgroundPosition: "0 0" },
+          to: { backgroundPosition: "-200% 0" },
+        },
+        shimmer: {
+          from: {
+            backgroundPosition: "0 0",
+          },
+          to: {
+            backgroundPosition: "-200% 0",
           },
         },
       },
@@ -47,11 +70,6 @@ function addVariablesForColors({ addBase, theme }) {
   );
 
   addBase({
-    ":root": {
-      ...newVars,
-      "--transparent": "transparent",
-      "--white": "#ffffff",
-      "--black": "#000000",
-    },
+    ":root": newVars,
   });
 }

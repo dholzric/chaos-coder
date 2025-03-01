@@ -60,7 +60,7 @@ Additional Notes:
 Format the code with proper indentation and spacing for readability.`;
 
     const response = await client.chat.completions.create({
-      model: 'mixtral-8x7b-32768',
+      model: 'llama-3.2-1b-preview',
       messages: [{ role: 'user', content: fullPrompt }],
       temperature: 0.7,
       max_tokens: 4096,
